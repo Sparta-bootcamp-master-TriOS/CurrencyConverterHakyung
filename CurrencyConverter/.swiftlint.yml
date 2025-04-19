@@ -1,0 +1,6 @@
+disabled_rules:
+  - trailing_comma
+
+excluded:
+  - ./CurrencyConverter/CurrencyConverterTests
+  - ./CurrencyConverter/CurrencyConverterUITests
