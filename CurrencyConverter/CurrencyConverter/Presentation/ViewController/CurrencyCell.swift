@@ -15,12 +15,23 @@ class CurrencyCell: UITableViewCell {
 
     private let currencyCodeLable = UILabel().then {
         $0.textColor = .black
-        $0.font = .systemFont(ofSize: 16)
+        $0.font = .systemFont(ofSize: 16, weight: .medium)
+    }
+    
+    private let countryLable = UILabel().then {
+        $0.textColor = .gray
+        $0.font = .systemFont(ofSize: 14, weight: .light)
     }
 
     private let rateLable = UILabel().then {
         $0.textColor = .black
         $0.font = .systemFont(ofSize: 16)
+        $0.textAlignment = .right
+    }
+    
+    private let stackView = UIStackView().then {
+        $0.axis = .vertical
+        $0.spacing = 4
     }
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -32,12 +43,25 @@ class CurrencyCell: UITableViewCell {
     }
     
     func configureUI() {
-        [ currencyCodeLable, rateLable ]
+        [
+            stackView,
+            rateLable,
+        ]
             .forEach { contentView.addSubview($0) }
         
-        currencyCodeLable.snp.makeConstraints {
-            $0.centerY.equalToSuperview()
+        [
+            currencyCodeLable,
+            countryLable,
+        ]
+            .forEach { stackView.addArrangedSubview($0) }
+        
+        contentView.snp.makeConstraints {
+            $0.edges.equalToSuperview()
+        }
+        
+        stackView.snp.makeConstraints {
             $0.leading.equalToSuperview().offset(16)
+            $0.centerY.equalToSuperview()
         }
         
         rateLable.snp.makeConstraints {
@@ -51,4 +75,8 @@ class CurrencyCell: UITableViewCell {
         self.currencyCodeLable.text = currencyCode
         self.rateLable.text = rate
     }
+}
+
+#Preview {
+    CurrencyViewController()
 }
