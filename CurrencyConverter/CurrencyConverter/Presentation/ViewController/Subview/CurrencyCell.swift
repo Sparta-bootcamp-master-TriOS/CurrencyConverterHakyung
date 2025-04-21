@@ -73,7 +73,3 @@ class CurrencyCell: UITableViewCell {
         self.rateLable.text = "\(value.rate)"
     }
 }
-
-#Preview {
-    CurrencyViewController()
-}
