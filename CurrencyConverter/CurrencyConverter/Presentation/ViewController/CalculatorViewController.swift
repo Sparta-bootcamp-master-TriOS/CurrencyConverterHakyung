@@ -42,10 +42,13 @@ final class CalculatorViewController: UIViewController {
                 let result = viewModel.calculateCurrency(input: input, rate: selectedItem.value.rate)
                 calculatorView.updateResult(input: input, result: result)
             } else {
-                let alert = UIAlertController(title: "오류", message: "올바른 숫자를 입력해주세요", preferredStyle: .alert)
+                let alert = UIAlertController(
+                    title: "오류",
+                    message: input.isEmpty ? "금액을 입력해주세요" : "올바른 숫자를 입력해주세요",
+                    preferredStyle: .alert
+                )
                 let cancel = UIAlertAction(title: "확인", style: .default, handler: nil)
                 alert.addAction(cancel)
-                
                 view.endEditing(true)
                 self.present(alert, animated: true, completion: nil)
             }
