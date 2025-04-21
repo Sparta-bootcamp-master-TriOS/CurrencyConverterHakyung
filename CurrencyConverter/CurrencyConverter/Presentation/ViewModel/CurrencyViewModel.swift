@@ -9,8 +9,10 @@ import UIKit
 
 final class CurrencyViewModel {
     
-    var onCurrencyUpdate: (([CurrencyPrsn]) -> Void)?
+    var onItemsUpdate: ((SortedCurrencyPrsn) -> Void)?
     var onError: ((String) -> Void)?
+    
+    private(set) var currencyItems = SortedCurrencyPrsn()
     
     private let currencyUseCase: CurrencyUseCaseImpl
     
@@ -18,27 +20,45 @@ final class CurrencyViewModel {
         self.currencyUseCase = currencyUseCase
     }
     
-    func loadCurrency() {
+    func loadItems() {
         currencyUseCase.loadCurrency { [weak self] result in
             guard let self else { return }
             
             switch result {
             case .success(let result):
-                DispatchQueue.main.async {
-                    let mappedResult: [CurrencyPrsn] = result.compactMap {
-                        return CurrencyPrsn(
-                            countryCode: $0.countryCode,
-                            countryName: $0.countryName,
-                            rate: $0.rate
-                        )
+                DispatchQueue.main.async { [weak self] in
+                    guard let self else { return }
+                    
+                    var currencyItems = CurrencyPrsn()
+                    result.currencyData.forEach {
+                        currencyItems[$0.key] =  CurrencyItemPrsn(countryName: $0.value.countryName, rate: $0.value.rate)
                     }
-                    self.onCurrencyUpdate?(mappedResult)
+                    self.currencyItems = getSortedItems(currencyItems)
+                    self.onItemsUpdate?(self.currencyItems)
                 }
             case .failure(let error):
                 DispatchQueue.main.async {
                     self.onError?(error.localizedDescription)
                 }
             }
+        }
+    }
+    
+    func getSortedItems(_ item: CurrencyPrsn) -> SortedCurrencyPrsn {
+        return item.sorted { $0.key < $1.key }
+    }
+    
+    func searchCurrency(query: String) {
+        DispatchQueue.main.async { [weak self] in
+            guard let self else { return }
+            let filterdItems: SortedCurrencyPrsn = self.currencyItems
+                .filter {
+                    $0.key.localizedCaseInsensitiveContains(query) ||
+                    $0.value.countryName.localizedCaseInsensitiveContains(query)
+                }.sorted {
+                    $0.key < $1.key
+                }
+            self.onItemsUpdate?(filterdItems)
         }
     }
 }

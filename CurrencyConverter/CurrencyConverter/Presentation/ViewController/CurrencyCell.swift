@@ -67,10 +67,13 @@ class CurrencyCell: UITableViewCell {
         }
     }
     
-    func configureItem(item: CurrencyPrsn?) {
-        guard let item else { return }
-        self.countryCodeLable.text = item.countryCode
-        self.countryLable.text = item.countryName
-        self.rateLable.text = "\(item.rate)"
+    func configureItem(key: String, value: CurrencyItemPrsn) {
+        self.countryCodeLable.text = key
+        self.countryLable.text = value.countryName
+        self.rateLable.text = "\(value.rate)"
     }
+}
+
+#Preview {
+    CurrencyViewController()
 }

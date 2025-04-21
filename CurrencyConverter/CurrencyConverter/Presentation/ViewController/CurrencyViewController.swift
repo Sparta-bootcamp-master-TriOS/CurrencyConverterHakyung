@@ -11,13 +11,15 @@ import SnapKit
 
 final class CurrencyViewController: UIViewController {
     
-    private let currencyViewModel = DIContainer.shared.currencyViewModel()
-    private(set) var currencyItems: [CurrencyPrsn]?
+    let viewModel = DIContainer.shared.currencyViewModel()
     
-    private lazy var tableView = UITableView().then {
+    var currencyItems = SortedCurrencyPrsn()
+    
+    lazy var tableView = UITableView().then {
         $0.delegate = self
         $0.dataSource = self
         $0.register(CurrencyCell.self, forCellReuseIdentifier: CurrencyCell.identifier)
+        $0.register(EmptyCell.self, forCellReuseIdentifier: EmptyCell.identifier)
     }
     
     private lazy var searchBar = UISearchBar().then {
@@ -30,21 +32,22 @@ final class CurrencyViewController: UIViewController {
         super.viewDidLoad()
         configureSubview()
         configureAutoLayout()
-        currencyViewModel.loadCurrency()
-        updateCurrency()
+        viewModel.loadItems()
+        
+        updateItems()
         showErrorAlert()
     }
     
-    private func updateCurrency() {
-        currencyViewModel.onCurrencyUpdate = { [weak self] result in
+    private func updateItems() {
+        viewModel.onItemsUpdate = { [weak self] currencyItems in
             guard let self else { return }
-            self.currencyItems = result
+            self.currencyItems = currencyItems
             self.tableView.reloadData()
         }
     }
     
     private func showErrorAlert() {
-        currencyViewModel.onError = { [weak self] error in
+        viewModel.onError = { [weak self] error in
             let alert = UIAlertController(title: "오류", message: "데이터를 불러올 수 없습니다", preferredStyle: .alert)
             let cancel = UIAlertAction(title: "확인", style: .default)
             alert.addAction(cancel)
