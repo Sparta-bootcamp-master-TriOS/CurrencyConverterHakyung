@@ -12,4 +12,5 @@ typealias CurrencyItemPrsn = CurrencyItemPresentation
 struct CurrencyItemPresentation: Decodable {
     let countryName: String
     let rate: Double
+    let baseCode: String
 }

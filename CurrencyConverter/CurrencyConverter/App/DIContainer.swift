@@ -6,7 +6,6 @@
 //
 
 final class DIContainer {
-    static let shared = DIContainer()
     
     func currencyViewModel() -> CurrencyViewModel {
         let currencyDataSource = CurrencyDataSource()
@@ -14,5 +13,9 @@ final class DIContainer {
         let currencyUseCase = CurrencyUseCaseImpl(currencyRepository: currencyRepository)
         let viewModel = CurrencyViewModel(currencyUseCase: currencyUseCase)
         return viewModel
+    }
+    
+    func calculatorViewModel() -> CalculatorViewModel {
+        return CalculatorViewModel()
     }
 }

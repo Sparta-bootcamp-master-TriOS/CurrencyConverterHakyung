@@ -70,6 +70,6 @@ class CurrencyCell: UITableViewCell {
     func configureItem(key: String, value: CurrencyItemPrsn) {
         self.countryCodeLable.text = key
         self.countryLable.text = value.countryName
-        self.rateLable.text = "\(value.rate)"
+        self.rateLable.text = String(format: "%.4f", value.rate)
     }
 }
