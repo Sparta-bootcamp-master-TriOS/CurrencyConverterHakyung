@@ -9,7 +9,7 @@ import UIKit
 
 final class CurrencyViewModel {
     
-    var onCurrencyUpdate: (([(String, Double)]) -> Void)?
+    var onCurrencyUpdate: (([CurrencyPrsn]) -> Void)?
     var onError: ((String) -> Void)?
     
     private let currencyUseCase: CurrencyUseCaseImpl
@@ -25,8 +25,14 @@ final class CurrencyViewModel {
             switch result {
             case .success(let result):
                 DispatchQueue.main.async {
-                    let sortedRates = result.rates.sorted { $0.key < $1.key }
-                    self.onCurrencyUpdate?(sortedRates)
+                    let mappedResult: [CurrencyPrsn] = result.compactMap {
+                        return CurrencyPrsn(
+                            countryCode: $0.countryCode,
+                            countryName: $0.countryName,
+                            rate: $0.rate
+                        )
+                    }
+                    self.onCurrencyUpdate?(mappedResult)
                 }
             case .failure(let error):
                 DispatchQueue.main.async {

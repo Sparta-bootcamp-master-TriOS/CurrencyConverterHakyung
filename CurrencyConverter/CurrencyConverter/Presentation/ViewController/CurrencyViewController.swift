@@ -12,7 +12,7 @@ import SnapKit
 final class CurrencyViewController: UIViewController {
     
     private let currencyViewModel = DIContainer.shared.currencyViewModel()
-    private(set) var currencyItems: [(String, Double)]?
+    private(set) var currencyItems: [CurrencyPrsn]?
     
     private lazy var tableView = UITableView().then {
         $0.delegate = self

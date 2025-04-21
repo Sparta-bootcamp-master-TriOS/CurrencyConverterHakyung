@@ -13,7 +13,7 @@ class CurrencyCell: UITableViewCell {
     
     static let identifier = "CurrencyCell"
 
-    private let currencyCodeLable = UILabel().then {
+    private let countryCodeLable = UILabel().then {
         $0.textColor = .black
         $0.font = .systemFont(ofSize: 16, weight: .medium)
     }
@@ -50,7 +50,7 @@ class CurrencyCell: UITableViewCell {
             .forEach { contentView.addSubview($0) }
         
         [
-            currencyCodeLable,
+            countryCodeLable,
             countryLable,
         ]
             .forEach { stackView.addArrangedSubview($0) }
@@ -70,10 +70,11 @@ class CurrencyCell: UITableViewCell {
         }
     }
     
-    func configureItems(currencyCode: String?, rate: String?) {
-        guard let currencyCode, let rate else { return }
-        self.currencyCodeLable.text = currencyCode
-        self.rateLable.text = rate
+    func configureItem(item: CurrencyPrsn?) {
+        guard let item else { return }
+        self.countryCodeLable.text = item.countryCode
+        self.countryLable.text = item.countryName
+        self.rateLable.text = "\(item.rate)"
     }
 }
 
