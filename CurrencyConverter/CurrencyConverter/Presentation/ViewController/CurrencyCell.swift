@@ -55,10 +55,6 @@ class CurrencyCell: UITableViewCell {
         ]
             .forEach { stackView.addArrangedSubview($0) }
         
-        contentView.snp.makeConstraints {
-            $0.edges.equalToSuperview()
-        }
-        
         stackView.snp.makeConstraints {
             $0.leading.equalToSuperview().offset(16)
             $0.centerY.equalToSuperview()
@@ -67,6 +63,7 @@ class CurrencyCell: UITableViewCell {
         rateLable.snp.makeConstraints {
             $0.centerY.equalToSuperview()
             $0.trailing.equalToSuperview().inset(16)
+            $0.width.equalTo(120)
         }
     }
     
@@ -76,8 +73,4 @@ class CurrencyCell: UITableViewCell {
         self.countryLable.text = item.countryName
         self.rateLable.text = "\(item.rate)"
     }
-}
-
-#Preview {
-    CurrencyViewController()
 }
