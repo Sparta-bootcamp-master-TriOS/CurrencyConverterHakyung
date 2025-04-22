@@ -59,6 +59,7 @@ final class CurrencyViewModel: ViewModelProtocol {
                         )
                     }
                     let sortedCurrencyItems = getSortedItems(currencyItems)
+                    self.currencyItems = sortedCurrencyItems
                     self.onStateChanged?(.currencyItems(sortedCurrencyItems))
                 }
             case .failure(let error):
@@ -77,6 +78,11 @@ final class CurrencyViewModel: ViewModelProtocol {
         DispatchQueue.main.async { [weak self] in
             guard let self,
                   let currencyItems = self.currencyItems else { return }
+            
+            if query.isEmpty {
+                self.onStateChanged?(.searchResult(currencyItems))
+                return
+            }
             
             let filterdItems: SortedCurrencyPrsn = currencyItems
                 .filter {
