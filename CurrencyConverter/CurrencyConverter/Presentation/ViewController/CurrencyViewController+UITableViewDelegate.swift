@@ -9,16 +9,19 @@ import UIKit
 
 extension CurrencyViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return self.currencyItems.isEmpty ? self.tableView.bounds.height : 60
+        let isEmpty = self.currencyItems?.isEmpty ?? true
+        return isEmpty ? self.tableView.bounds.height : 60
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        guard let items = self.currencyItems, !items.isEmpty else { return }
+        let selectedItem = items[indexPath.row]
+        
         let viewModel = DIContainer().calculatorViewModel()
-        viewModel.configureItem(with: self.currencyItems[indexPath.row])
+        viewModel.configureItem(with: selectedItem)
         
-        let viewController = CalculatorViewController(viewModel: viewModel)
-        
+        let calculateVC = CalculatorViewController(viewModel: viewModel)
         self.navigationItem.backButtonTitle = "환율 정보"
-        self.navigationController?.pushViewController(viewController, animated: true)
+        self.navigationController?.pushViewController(calculateVC, animated: true)
     }
 }

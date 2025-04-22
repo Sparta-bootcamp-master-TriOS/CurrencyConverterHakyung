@@ -10,6 +10,6 @@ import UIKit
 extension CurrencyViewController: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         guard let text = searchBar.text else { return }
-            viewModel.searchCurrency(query: text)
+        viewModel.action?(.searchCurrency(text))
     }
 }

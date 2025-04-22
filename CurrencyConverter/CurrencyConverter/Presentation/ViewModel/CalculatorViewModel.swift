@@ -13,20 +13,12 @@ final class CalculatorViewModel: ViewModelProtocol {
         case calculate(String)
     }
     
-    struct State {
-        var selectedItem: CalculatorCurrency?
-        var textFieldInput: String?
-        var result: String?
+    enum State {
+        case calculateResult(input: String, result: String)
     }
 
     var action: ((Action) -> Void)?
     var onStateChanged: ((State) -> Void)?
-    
-    private(set) var state = State() {
-        didSet {
-            self.onStateChanged?(state)
-        }
-    }
 
     private(set) var selectedItem: CalculatorCurrency?
     
@@ -36,7 +28,7 @@ final class CalculatorViewModel: ViewModelProtocol {
             switch action {
             case .calculate(let input):
                 let result = self.calculateCurrency(input: input)
-                self.state = State(textFieldInput: input, result: result)
+                self.onStateChanged?(.calculateResult(input: input, result: result))
             }
         }
     }

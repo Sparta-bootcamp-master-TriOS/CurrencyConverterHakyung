@@ -60,9 +60,10 @@ final class CalculatorViewController: UIViewController {
     private func showCalculatedResult() {
         viewModel?.onStateChanged = { [weak self] state in
             guard let self else { return }
-            let input = state.textFieldInput
-            let result = state.result
-            self.calculatorView.updateResult(input: input, result: result)
+            switch state {
+            case .calculateResult(let input, let result):
+                self.calculatorView.updateResult(input: input, result: result)
+            }
         }
         
     }

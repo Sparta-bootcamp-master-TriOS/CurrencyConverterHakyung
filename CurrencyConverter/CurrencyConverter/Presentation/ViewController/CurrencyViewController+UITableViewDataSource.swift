@@ -10,12 +10,17 @@ import UIKit
 extension CurrencyViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.currencyItems.isEmpty ? 1 : self.currencyItems.count
+        guard let items = self.currencyItems else { return 1}
+        return items.isEmpty ? 1 : items.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        if self.currencyItems.isEmpty {
+        guard let items = self.currencyItems else {
+            return UITableViewCell()
+        }
+        
+        if items.isEmpty {
             guard let cell = tableView.dequeueReusableCell(withIdentifier: EmptyCell.identifier, for: indexPath) as? EmptyCell else {
                 return UITableViewCell()
             }
@@ -26,11 +31,11 @@ extension CurrencyViewController: UITableViewDataSource {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: CurrencyCell.identifier, for: indexPath) as? CurrencyCell else {
             return UITableViewCell()
         }
+        
+        let item = items[indexPath.row]
         cell.selectionStyle = .none
         cell.configureUI()
-        let key = self.currencyItems[indexPath.row].key
-        let value = self.currencyItems[indexPath.row].value
-        cell.configureItem(key: key, value: value)
+        cell.configureItem(key: item.key, value: item.value)
         return cell
     }
 }

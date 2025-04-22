@@ -7,21 +7,42 @@
 
 import UIKit
 
-final class CurrencyViewModel {
+final class CurrencyViewModel: ViewModelProtocol {
     
-    var onItemsUpdate: ((SortedCurrencyPrsn) -> Void)?
-    var onError: ((String) -> Void)?
+    enum Action {
+        case fetchCurrency
+        case searchCurrency(String)
+    }
     
-    private(set) var currencyItems = SortedCurrencyPrsn()
+    enum State {
+        case currencyItems(SortedCurrencyPrsn)
+        case errorForAlert(String)
+        case searchResult(SortedCurrencyPrsn)
+    }
+
+    var action: ((Action) -> Void)?
+    var onStateChanged: ((State) -> Void)?
+    
+    private(set) var currencyItems: SortedCurrencyPrsn?
     
     private let currencyUseCase: CurrencyUseCaseImpl
     
     init(currencyUseCase: CurrencyUseCaseImpl) {
         self.currencyUseCase = currencyUseCase
+        
+        self.action = { [weak self] action in
+            guard let self else { return }
+            switch action {
+            case .fetchCurrency:
+                self.fetchCurrency()
+            case .searchCurrency(let query):
+                self.searchCurrency(query: query)
+            }
+        }
     }
     
-    func loadItems() {
-        currencyUseCase.loadCurrency { [weak self] result in
+    func fetchCurrency() {
+        currencyUseCase.fetchCurrency { [weak self] result in
             guard let self else { return }
             
             switch result {
@@ -31,14 +52,18 @@ final class CurrencyViewModel {
                     
                     var currencyItems = CurrencyPrsn()
                     result.currencyData.forEach {
-                        currencyItems[$0.key] =  CurrencyItemPrsn(countryName: $0.value.countryName, rate: $0.value.rate, baseCode: $0.value.baseCode)
+                        currencyItems[$0.key] =  CurrencyItemPrsn(
+                            countryName: $0.value.countryName,
+                            rate: $0.value.rate,
+                            baseCode: $0.value.baseCode
+                        )
                     }
-                    self.currencyItems = getSortedItems(currencyItems)
-                    self.onItemsUpdate?(self.currencyItems)
+                    let sortedCurrencyItems = getSortedItems(currencyItems)
+                    self.onStateChanged?(.currencyItems(sortedCurrencyItems))
                 }
             case .failure(let error):
                 DispatchQueue.main.async {
-                    self.onError?(error.localizedDescription)
+                    self.onStateChanged?(.errorForAlert(error.localizedDescription))
                 }
             }
         }
@@ -50,15 +75,18 @@ final class CurrencyViewModel {
     
     func searchCurrency(query: String) {
         DispatchQueue.main.async { [weak self] in
-            guard let self else { return }
-            let filterdItems: SortedCurrencyPrsn = self.currencyItems
+            guard let self,
+                  let currencyItems = self.currencyItems else { return }
+            
+            let filterdItems: SortedCurrencyPrsn = currencyItems
                 .filter {
                     $0.key.localizedCaseInsensitiveContains(query) ||
                     $0.value.countryName.localizedCaseInsensitiveContains(query)
                 }.sorted {
                     $0.key < $1.key
                 }
-            self.onItemsUpdate?(filterdItems)
+            
+            self.onStateChanged?(.searchResult(filterdItems))
         }
     }
 }

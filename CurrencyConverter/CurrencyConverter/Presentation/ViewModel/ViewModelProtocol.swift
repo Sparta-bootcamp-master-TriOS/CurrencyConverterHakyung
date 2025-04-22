@@ -10,5 +10,5 @@ protocol ViewModelProtocol {
     associatedtype State
     
     var action: ((Action) -> Void)? { get }
-    var state: State { get }
+    var onStateChanged: ((State) -> Void)? { get }
 }
