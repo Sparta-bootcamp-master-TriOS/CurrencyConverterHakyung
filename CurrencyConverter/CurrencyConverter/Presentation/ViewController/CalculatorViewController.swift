@@ -9,15 +9,13 @@ import UIKit
 import SnapKit
 
 final class CalculatorViewController: UIViewController {
-        
-    let viewModel = DIContainer().calculatorViewModel()
-    
+            
     private let calculatorView = CalculatorView()
     
-    var selectedItem: CalculatorCurrency
+    private let viewModel: CalculatorViewModel?
     
-    init(selectedItem: CalculatorCurrency) {
-        self.selectedItem = selectedItem
+    init(viewModel: CalculatorViewModel) {
+        self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -26,21 +24,21 @@ final class CalculatorViewController: UIViewController {
     }
     
     override func loadView() {
-        calculatorView.configureUI(selectedItem)
+        calculatorView.configureUI(viewModel?.selectedItem)
         self.view = calculatorView
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        amountTextFieldHandler()
+        convertBtnAction()
+        showCalculatedResult()
     }
     
-    private func amountTextFieldHandler() {
+    private func convertBtnAction() {
         calculatorView.onConvertButtonTapped = { [weak self] input in
             guard let self else { return }
             if (Double(input) != nil) {
-                let result = viewModel.calculateCurrency(input: input, rate: selectedItem.value.rate)
-                calculatorView.updateResult(input: input, result: result)
+                viewModel?.action?(.calculate(input))
             } else {
                 let alert = UIAlertController(
                     title: "오류",
@@ -53,5 +51,15 @@ final class CalculatorViewController: UIViewController {
                 self.present(alert, animated: true, completion: nil)
             }
         }
+    }
+    
+    private func showCalculatedResult() {
+        viewModel?.onStateChanged = { [weak self] state in
+            guard let self else { return }
+            let input = state.textFieldInput
+            let result = state.result
+            self.calculatorView.updateResult(input: input, result: result)
+        }
+        
     }
 }

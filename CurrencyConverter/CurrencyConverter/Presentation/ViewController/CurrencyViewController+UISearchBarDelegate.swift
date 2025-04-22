@@ -9,11 +9,7 @@ import UIKit
 
 extension CurrencyViewController: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        if searchText.isEmpty {
-            
-        } else {
-            guard let text = searchBar.text else { return }
+        guard let text = searchBar.text else { return }
             viewModel.searchCurrency(query: text)
-        }
     }
 }

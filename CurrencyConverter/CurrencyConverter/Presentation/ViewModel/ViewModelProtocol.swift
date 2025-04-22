@@ -5,4 +5,10 @@
 //  Created by kingj on 4/22/25.
 //
 
-import Foundation
+protocol ViewModelProtocol {
+    associatedtype Action
+    associatedtype State
+    
+    var action: ((Action) -> Void)? { get }
+    var state: State { get }
+}

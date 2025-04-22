@@ -13,8 +13,12 @@ extension CurrencyViewController: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let calculatorVC = CalculatorViewController(selectedItem: self.currencyItems[indexPath.row])
+        let viewModel = DIContainer().calculatorViewModel()
+        viewModel.configureItem(with: self.currencyItems[indexPath.row])
+        
+        let viewController = CalculatorViewController(viewModel: viewModel)
+        
         self.navigationItem.backButtonTitle = "환율 정보"
-        self.navigationController?.pushViewController(calculatorVC, animated: true)
+        self.navigationController?.pushViewController(viewController, animated: true)
     }
 }
