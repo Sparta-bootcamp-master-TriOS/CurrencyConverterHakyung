@@ -57,7 +57,7 @@ final class CalculatorView: UIView {
         $0.configuration = config
         $0.layer.cornerRadius = 8
         
-        let action = UIAction(title: "") { [weak self] _ in
+        let action = UIAction { [weak self] _ in
             guard let self,
                   let input = self.amountTextField.text else { return }
             self.onConvertButtonTapped?(input)

@@ -34,6 +34,23 @@ class CurrencyCell: UITableViewCell {
         $0.spacing = 4
     }
     
+    private lazy var bookMarkButton = UIButton().then {
+        var config = UIImage.SymbolConfiguration(pointSize: 24, weight: .regular)
+        let image = UIImage(systemName: "star", withConfiguration: config)
+        $0.setImage(image, for: .normal)
+        
+        let selectedImage = UIImage(systemName: "star.fill", withConfiguration: config)
+        $0.setImage(selectedImage, for: .selected)
+        
+        let action = UIAction { [weak self] _ in
+            guard let self else { return }
+            self.toggleBookMarkBtn()
+        }
+        
+        $0.addAction(action, for: .touchUpInside)
+        $0.tintColor = .systemYellow
+    }
+    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
     }
@@ -42,10 +59,15 @@ class CurrencyCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
+    private func toggleBookMarkBtn() {
+        self.bookMarkButton.isSelected.toggle()
+    }
+    
     func configureUI() {
         [
             stackView,
             rateLable,
+            bookMarkButton
         ]
             .forEach { contentView.addSubview($0) }
         
@@ -62,9 +84,15 @@ class CurrencyCell: UITableViewCell {
         
         rateLable.snp.makeConstraints {
             $0.centerY.equalToSuperview()
-            $0.trailing.equalToSuperview().inset(16)
+            $0.trailing.equalTo(bookMarkButton.snp.leading).offset(-16)
             $0.width.equalTo(120)
         }
+
+        bookMarkButton.snp.makeConstraints {
+            $0.centerY.equalToSuperview()
+            $0.trailing.equalToSuperview().inset(20)
+        }
+        
     }
     
     func configureItem(key: String, value: CurrencyItemPrsn) {
