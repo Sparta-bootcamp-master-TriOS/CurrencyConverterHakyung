@@ -20,8 +20,8 @@ final class CalculatorViewModel: ViewModelProtocol {
     }
 
     var action: ((Action) -> Void)?
-    
     var onStateChanged: ((State) -> Void)?
+    
     private(set) var state = State() {
         didSet {
             self.onStateChanged?(state)

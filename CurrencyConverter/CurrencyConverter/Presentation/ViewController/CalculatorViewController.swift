@@ -40,17 +40,21 @@ final class CalculatorViewController: UIViewController {
             if (Double(input) != nil) {
                 viewModel?.action?(.calculate(input))
             } else {
-                let alert = UIAlertController(
-                    title: "오류",
-                    message: input.isEmpty ? "금액을 입력해주세요" : "올바른 숫자를 입력해주세요",
-                    preferredStyle: .alert
-                )
-                let cancel = UIAlertAction(title: "확인", style: .default, handler: nil)
-                alert.addAction(cancel)
-                view.endEditing(true)
-                self.present(alert, animated: true, completion: nil)
+                showErrorAlert(input)
             }
         }
+    }
+    
+    private func showErrorAlert(_ input: String) {
+        let alert = UIAlertController(
+            title: "오류",
+            message: input.isEmpty ? "금액을 입력해주세요" : "올바른 숫자를 입력해주세요",
+            preferredStyle: .alert
+        )
+        let cancel = UIAlertAction(title: "확인", style: .default, handler: nil)
+        alert.addAction(cancel)
+        view.endEditing(true)
+        self.present(alert, animated: true, completion: nil)
     }
     
     private func showCalculatedResult() {
