@@ -94,11 +94,7 @@ final class CurrencyViewModel: ViewModelProtocol {
     ) -> String {
         let calendar = Calendar.current
         let isSameDay = calendar.isDate(updatedDate, inSameDayAs: newDate)
-        
-        print("🔍 oldRate: \(storedRate), newRate: \(newRate)")
-        print("🔍 oldDate: \(updatedDate), newDate: \(newDate)")
-        print("🔍 isSameDay: \(isSameDay)")
-        
+    
         guard !isSameDay else { return "" }
         
         let minusValue = newRate - storedRate
