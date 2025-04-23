@@ -1,4 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="1" systemVersion="11A491" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithCloudKit="false" userDefinedModelVersionIdentifier="">
-    <elements/>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="23605" systemVersion="24D70" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="CurrencyEntity" representedClassName="CurrencyEntity" syncable="YES">
+        <attribute name="countryCode" attributeType="String" spotlightIndexingEnabled="YES"/>
+        <attribute name="isBookmarked" attributeType="Boolean" usesScalarValueType="YES"/>
+        <uniquenessConstraints>
+            <uniquenessConstraint>
+                <constraint value="countryCode"/>
+            </uniquenessConstraint>
+        </uniquenessConstraints>
+    </entity>
 </model>

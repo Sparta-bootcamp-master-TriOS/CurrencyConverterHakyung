@@ -12,6 +12,7 @@ final class CurrencyViewModel: ViewModelProtocol {
     enum Action {
         case fetchCurrency
         case searchCurrency(String)
+        case toggleBookmark(String)
     }
     
     enum State {
@@ -25,10 +26,15 @@ final class CurrencyViewModel: ViewModelProtocol {
     
     private(set) var currencyItems: SortedCurrencyPrsn?
     
-    private let currencyUseCase: CurrencyUseCaseImpl
+    private let coreDataUseCase: CoreDataUseCaseImpl
+    private let mergeUseCase: MergeUseCaseImpl
     
-    init(currencyUseCase: CurrencyUseCaseImpl) {
-        self.currencyUseCase = currencyUseCase
+    init(
+        coreDataUseCase: CoreDataUseCaseImpl,
+        mergeUseCase: MergeUseCaseImpl
+    ) {
+        self.coreDataUseCase = coreDataUseCase
+        self.mergeUseCase = mergeUseCase
         
         self.action = { [weak self] action in
             guard let self else { return }
@@ -37,12 +43,14 @@ final class CurrencyViewModel: ViewModelProtocol {
                 self.fetchCurrency()
             case .searchCurrency(let query):
                 self.searchCurrency(query: query)
+            case .toggleBookmark(let countryCode):
+                self.toggleBookmark(countryCode: countryCode)
             }
         }
     }
     
     func fetchCurrency() {
-        currencyUseCase.fetchCurrency { [weak self] result in
+        mergeUseCase.fetchData { [weak self] result in
             guard let self else { return }
             
             switch result {
@@ -50,14 +58,17 @@ final class CurrencyViewModel: ViewModelProtocol {
                 DispatchQueue.main.async { [weak self] in
                     guard let self else { return }
                     
+                    // CurrencyDom -> CurrencyPrsn
                     var currencyItems = CurrencyPrsn()
                     result.currencyData.forEach {
                         currencyItems[$0.key] =  CurrencyItemPrsn(
                             countryName: $0.value.countryName,
                             rate: $0.value.rate,
-                            baseCode: $0.value.baseCode
+                            baseCode: $0.value.baseCode,
+                            isBookmarked: $0.value.isBookmarked
                         )
                     }
+                    
                     let sortedCurrencyItems = getSortedItems(currencyItems)
                     self.currencyItems = sortedCurrencyItems
                     self.onStateChanged?(.currencyItems(sortedCurrencyItems))
@@ -70,8 +81,17 @@ final class CurrencyViewModel: ViewModelProtocol {
         }
     }
     
-    func getSortedItems(_ item: CurrencyPrsn) -> SortedCurrencyPrsn {
-        return item.sorted { $0.key < $1.key }
+    // 1. 북마크된 -> 2. 통화코드순 -> 3. 북마크 안된 -> 4. 통화코드순
+    func getSortedItems(_ items: CurrencyPrsn) -> SortedCurrencyPrsn {
+        let bookmarked = items
+            .filter { $0.value.isBookmarked }
+            .sorted { $0.key < $1.key }
+        
+        let unBookmarked = items
+            .filter { !$0.value.isBookmarked }
+            .sorted { $0.key < $1.key }
+        
+        return bookmarked + unBookmarked
     }
     
     func searchCurrency(query: String) {
@@ -93,6 +113,39 @@ final class CurrencyViewModel: ViewModelProtocol {
                 }
             
             self.onStateChanged?(.searchResult(filterdItems))
+        }
+    }
+    
+    func toggleBookmark(countryCode: String) {
+        do {
+            // CoreData에 해당 countryCode가 존재하는지 확인
+            if try
+                !self.coreDataUseCase.exits(countryCode: countryCode) {
+                try self.coreDataUseCase.insert(countryCode: countryCode)
+            }
+            
+            try self.coreDataUseCase.toggleBookmark(countryCode: countryCode)
+            
+            guard var currencyItems = self.currencyItems else { return }
+            
+            for (index, item) in currencyItems.enumerated() {
+                if item.key == countryCode {
+                    var updatedItems = currencyItems[index].value
+                    updatedItems.isBookmarked.toggle()
+                    currencyItems[index].value = updatedItems
+                }
+            }
+            
+            let sortedCurrencyItems = getSortedItems(
+                Dictionary(uniqueKeysWithValues: currencyItems)
+            )
+            self.currencyItems = sortedCurrencyItems
+            self.onStateChanged?(.currencyItems(sortedCurrencyItems))
+            
+        } catch let error as CoreDataErrorPresentation {
+            print(error.description)
+        } catch {
+            print("[Unknowned Error] At Toggle Bookmark : \(error.localizedDescription)")
         }
     }
 }

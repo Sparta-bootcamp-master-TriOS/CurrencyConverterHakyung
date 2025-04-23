@@ -12,6 +12,8 @@ import SnapKit
 class CurrencyCell: UITableViewCell {
     
     static let identifier = "CurrencyCell"
+    
+    var onBookmarkBtnTapped: ((String) -> Void)?
 
     private let countryCodeLable = UILabel().then {
         $0.textColor = .black
@@ -61,6 +63,9 @@ class CurrencyCell: UITableViewCell {
     
     private func toggleBookMarkBtn() {
         self.bookMarkButton.isSelected.toggle()
+        
+        guard let countryCode = self.countryCodeLable.text else { return }
+        self.onBookmarkBtnTapped?(countryCode)
     }
     
     func configureUI() {
@@ -99,5 +104,6 @@ class CurrencyCell: UITableViewCell {
         self.countryCodeLable.text = key
         self.countryLable.text = value.countryName
         self.rateLable.text = String(format: "%.4f", value.rate)
+        self.bookMarkButton.isSelected = value.isBookmarked
     }
 }
