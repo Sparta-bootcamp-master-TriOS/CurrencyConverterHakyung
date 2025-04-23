@@ -5,6 +5,8 @@
 //  Created by kingj on 4/21/25.
 //
 
+import Foundation
+
 typealias CurrencyPrsn = [String: CurrencyItemPrsn]
 
 typealias SortedCurrencyPrsn = [(key: String, value: CurrencyItemPrsn)]
@@ -16,4 +18,7 @@ struct CurrencyItemPresentation: Decodable {
     let rate: Double
     let baseCode: String
     var isBookmarked: Bool
+    let updatedDate: Date
+    let oldRate: Double
+    let newDate: Date
 }

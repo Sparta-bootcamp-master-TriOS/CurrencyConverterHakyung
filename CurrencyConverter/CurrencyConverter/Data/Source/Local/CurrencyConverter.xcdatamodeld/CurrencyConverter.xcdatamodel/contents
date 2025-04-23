@@ -3,6 +3,8 @@
     <entity name="CurrencyEntity" representedClassName="CurrencyEntity" syncable="YES">
         <attribute name="countryCode" attributeType="String" spotlightIndexingEnabled="YES"/>
         <attribute name="isBookmarked" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="oldRate" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="updatedDate" attributeType="Date" usesScalarValueType="NO"/>
         <uniquenessConstraints>
             <uniquenessConstraint>
                 <constraint value="countryCode"/>

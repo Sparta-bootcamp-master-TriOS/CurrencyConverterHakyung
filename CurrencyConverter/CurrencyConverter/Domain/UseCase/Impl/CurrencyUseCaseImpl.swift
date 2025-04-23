@@ -19,11 +19,15 @@ final class CurrencyUseCaseImpl: CurrencyUseCase {
         currencyRepository.fetchCurrency { result in
             switch result {
             case .success(let result):
+                
+                self.currencyRepository.saveToCoreData(result)
+                
                 let currencyData: [String: CurrencyItemDom] = result.rates.reduce(into: [:]) { dict, element in
                     
                     let (countryCode, rate) = element
                     let countryName = CountryCode.countryCode[countryCode] ?? "nil"
                     let baseCode = result.baseCode
+                    let newDate = Date(timeIntervalSince1970: result.timeLastUpdateUnix)
                     
                     dict[countryCode] = CurrencyItemDom(
                         countryName: countryName,
@@ -31,7 +35,11 @@ final class CurrencyUseCaseImpl: CurrencyUseCase {
                         baseCode: baseCode,
                         
                         // CoreData
-                        isBookmarked: false
+                        isBookmarked: false,
+                        updatedDate: Date(),
+                        oldRate: -1.0,
+                        
+                        newDate: newDate
                     )
                 }
                 completion(.success(CurrencyDom(currencyData: currencyData)))

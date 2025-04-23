@@ -112,19 +112,11 @@ class CurrencyCell: UITableViewCell {
         
     }
     
-    func configureItem(key: String, value: CurrencyItemPrsn) {
+    func configureItem(key: String, value: CurrencyItemPrsn, icon: String) {
         self.countryCodeLable.text = key
         self.countryLable.text = value.countryName
         self.rateLable.text = String(format: "%.4f", value.rate)
         self.bookMarkButton.isSelected = value.isBookmarked
-    }
-    
-    func updateValue(from oldValue: Double, to newValue: Double) -> String {
-        let minusValue = newValue - oldValue
-        if abs(minusValue) > 0.01 {
-            if minusValue > 0.01 { return "🔼" }
-            if minusValue < -0.01 { return "🔽" }
-        }
-        return ""
+        self.upDownLabel.text = icon
     }
  }

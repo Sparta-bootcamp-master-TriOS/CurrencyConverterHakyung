@@ -46,12 +46,18 @@ final class MergeUseCaseImpl: MergeUseCase {
         var mergedData: [String: CurrencyItemDom] = [:]
         
         currencyApi.currencyData.forEach { countryCode, item in
-            let isBookmarked = coreData?.currencyData[countryCode]?.isBookmarked ?? false
+            guard let coreItem = coreData?.currencyData[countryCode] else { return }
+            let isBookmarked = coreItem.isBookmarked
+            let updatedDate = coreItem.updatedDate
+            let oldRate = coreItem.oldRate
             let mergedItem = CurrencyItemDom(
                 countryName: item.countryName,
                 rate: item.rate,
                 baseCode: item.baseCode,
-                isBookmarked: isBookmarked
+                isBookmarked: isBookmarked,
+                updatedDate: updatedDate,
+                oldRate: oldRate,
+                newDate: item.newDate
             )
             mergedData[countryCode] = mergedItem
         }
