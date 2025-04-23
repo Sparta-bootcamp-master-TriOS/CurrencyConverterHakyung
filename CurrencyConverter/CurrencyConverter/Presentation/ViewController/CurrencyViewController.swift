@@ -79,7 +79,7 @@ final class CurrencyViewController: UIViewController {
     }
     
     private func configureSubview() {
-        view.backgroundColor = .white
+        view.backgroundColor = .background
         
         [
             tableView,

@@ -17,7 +17,7 @@ final class CalculatorView: UIView {
     
     private let titleLable = UILabel().then {
         $0.text = "환율 계산기"
-        $0.textColor = .black
+        $0.textColor = .mainText
         $0.font = .systemFont(ofSize: 30, weight: .black)
     }
     
@@ -28,12 +28,12 @@ final class CalculatorView: UIView {
     }
     
     private let countryCodeLable = UILabel().then {
-        $0.textColor = .black
+        $0.textColor = .mainText
         $0.font = .boldSystemFont(ofSize: 24)
     }
     
     private let countryNameLable = UILabel().then {
-        $0.textColor = .gray
+        $0.textColor = .secondaryText
         $0.font = .systemFont(ofSize: 16, weight: .regular)
     }
     
@@ -46,7 +46,7 @@ final class CalculatorView: UIView {
     
     private lazy var convertButton = UIButton().then {
         var config = UIButton.Configuration.filled()
-        config.baseBackgroundColor = .systemBlue
+        config.baseBackgroundColor = .button
         config.baseForegroundColor = .white
         
         let attributes: [NSAttributedString.Key: Any] = [
@@ -67,7 +67,7 @@ final class CalculatorView: UIView {
     
     private let resultLabel = UILabel().then {
         $0.text = "계산 결과가 여기에 표시됩니다"
-        $0.textColor = .black
+        $0.textColor = .mainText
         $0.numberOfLines = 0
         $0.textAlignment = .center
         $0.font = .systemFont(ofSize: 20, weight: .medium)
@@ -98,7 +98,7 @@ final class CalculatorView: UIView {
     }
     
     private func configureSubview() {
-        self.backgroundColor = .white
+        self.backgroundColor = .background
         
         addSubview(contentView)
         
