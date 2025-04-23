@@ -53,6 +53,11 @@ class CurrencyCell: UITableViewCell {
         $0.tintColor = .systemYellow
     }
     
+    private let upDownLabel = UILabel().then {
+        $0.font = .systemFont(ofSize: 24)
+        $0.text = "🔼"
+    }
+    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
     }
@@ -72,6 +77,7 @@ class CurrencyCell: UITableViewCell {
         [
             stackView,
             rateLable,
+            upDownLabel,
             bookMarkButton
         ]
             .forEach { contentView.addSubview($0) }
@@ -89,8 +95,14 @@ class CurrencyCell: UITableViewCell {
         
         rateLable.snp.makeConstraints {
             $0.centerY.equalToSuperview()
-            $0.trailing.equalTo(bookMarkButton.snp.leading).offset(-16)
+            $0.trailing.equalTo(upDownLabel.snp.leading).offset(-10)
             $0.width.equalTo(120)
+        }
+        
+        upDownLabel.snp.makeConstraints {
+            $0.centerY.equalToSuperview()
+            $0.width.equalTo(30)
+            $0.trailing.equalTo(bookMarkButton.snp.leading).offset(-15)
         }
 
         bookMarkButton.snp.makeConstraints {
@@ -106,4 +118,13 @@ class CurrencyCell: UITableViewCell {
         self.rateLable.text = String(format: "%.4f", value.rate)
         self.bookMarkButton.isSelected = value.isBookmarked
     }
-}
+    
+    func updateValue(from oldValue: Double, to newValue: Double) -> String {
+        let minusValue = newValue - oldValue
+        if abs(minusValue) > 0.01 {
+            if minusValue > 0.01 { return "🔼" }
+            if minusValue < -0.01 { return "🔽" }
+        }
+        return ""
+    }
+ }
