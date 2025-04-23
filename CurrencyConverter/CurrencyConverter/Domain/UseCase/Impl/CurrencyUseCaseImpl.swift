@@ -22,9 +22,9 @@ final class CurrencyUseCaseImpl: CurrencyUseCase {
                 
                 self.currencyRepository.saveToCoreData(result)
                 
-                let currencyData: [String: CurrencyItemDom] = result.rates.reduce(into: [:]) { dict, element in
+                let currencyData: [String: CurrencyItemDom] = result.rates.reduce(into: [:]) { dict, item in
                     
-                    let (countryCode, rate) = element
+                    let (countryCode, rate) = item
                     let countryName = CountryCode.countryCode[countryCode] ?? "nil"
                     let baseCode = result.baseCode
                     let newDate = Date(timeIntervalSince1970: result.timeLastUpdateUnix)

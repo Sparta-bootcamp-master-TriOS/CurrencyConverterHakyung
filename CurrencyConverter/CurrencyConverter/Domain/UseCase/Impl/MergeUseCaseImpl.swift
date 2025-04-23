@@ -47,6 +47,14 @@ final class MergeUseCaseImpl: MergeUseCase {
         
         currencyApi.currencyData.forEach { countryCode, item in
             guard let coreItem = coreData?.currencyData[countryCode] else { return }
+            
+            
+            print("✅ Merge 중 - \(countryCode)")
+            print("    oldRate(core): \(coreItem.oldRate)")
+            print("    updatedDate(core): \(coreItem.updatedDate)")
+            print("    newRate(api): \(item.rate)")
+            print("    newDate(api): \(item.newDate)")
+            
             let isBookmarked = coreItem.isBookmarked
             let updatedDate = coreItem.updatedDate
             let oldRate = coreItem.oldRate

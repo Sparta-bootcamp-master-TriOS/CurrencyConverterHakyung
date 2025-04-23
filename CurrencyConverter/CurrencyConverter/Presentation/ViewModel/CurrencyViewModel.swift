@@ -95,6 +95,10 @@ final class CurrencyViewModel: ViewModelProtocol {
         let calendar = Calendar.current
         let isSameDay = calendar.isDate(updatedDate, inSameDayAs: newDate)
         
+        print("🔍 oldRate: \(storedRate), newRate: \(newRate)")
+        print("🔍 oldDate: \(updatedDate), newDate: \(newDate)")
+        print("🔍 isSameDay: \(isSameDay)")
+        
         guard !isSameDay else { return "" }
         
         let minusValue = newRate - storedRate
@@ -142,12 +146,6 @@ final class CurrencyViewModel: ViewModelProtocol {
     
     func toggleBookmark(countryCode: String) {
         do {
-            // CoreData에 해당 countryCode가 존재하는지 확인
-//            if try
-//                !self.coreDataUseCase.exits(countryCode: countryCode) {
-//                try self.coreDataUseCase.insert(countryCode: countryCode)
-//            }
-//            
             try self.coreDataUseCase.toggleBookmark(countryCode: countryCode)
             
             guard var currencyItems = self.currencyItems else { return }

@@ -10,7 +10,7 @@ import CoreData
 struct CurrencyMapper {
     static func toCurrencyEntity(from dto: Currency, context: NSManagedObjectContext) {
         let rates = dto.rates
-        let newData = Date(timeIntervalSince1970: dto.timeLastUpdateUnix)
+        let newDate = Date(timeIntervalSince1970: dto.timeLastUpdateUnix)
 
         for (countryCode, rate) in rates {
             // countryCode 기준으로 기존 데이터 fetch
@@ -22,17 +22,19 @@ struct CurrencyMapper {
             // 기존 값 있으면 업데이트, 없으면 새로 생성
             if let entity = exist {
                 let calendar = Calendar.current
-                let isSameDay = calendar.isDate(entity.updatedDate, inSameDayAs: newData)
+                let isSameDay = calendar.isDate(entity.updatedDate, inSameDayAs: newDate)
                 
                 if !isSameDay {
-                    entity.oldRate = rate
-                    entity.updatedDate = newData
+                    entity.oldRate = entity.currentRate
+                    entity.currentRate = rate
+                    entity.updatedDate = entity.updatedDate
                 }
             } else {
                 let entity = CurrencyEntity(context: context)
                 entity.countryCode = countryCode
                 entity.oldRate = rate
-                entity.updatedDate = newData
+                entity.currentRate = rate
+                entity.updatedDate = newDate
                 entity.isBookmarked = false
             }
         }
