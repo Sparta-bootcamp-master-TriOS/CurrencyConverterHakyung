@@ -18,6 +18,9 @@ extension CurrencyEntity {
 
     @NSManaged public var countryCode: String
     @NSManaged public var isBookmarked: Bool
+    @NSManaged public var oldRate: Double
+    @NSManaged public var updatedDate: Date
+    @NSManaged public var currentRate: Double
 
 }
 

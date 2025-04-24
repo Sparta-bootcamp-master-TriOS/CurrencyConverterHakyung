@@ -60,12 +60,16 @@ final class CurrencyViewModel: ViewModelProtocol {
                     
                     // CurrencyDom -> CurrencyPrsn
                     var currencyItems = CurrencyPrsn()
+                    
                     result.currencyData.forEach {
                         currencyItems[$0.key] =  CurrencyItemPrsn(
                             countryName: $0.value.countryName,
                             rate: $0.value.rate,
                             baseCode: $0.value.baseCode,
-                            isBookmarked: $0.value.isBookmarked
+                            isBookmarked: $0.value.isBookmarked,
+                            updatedDate: $0.value.updatedDate,
+                            oldRate: $0.value.oldRate,
+                            newDate: $0.value.newDate
                         )
                     }
                     
@@ -79,6 +83,30 @@ final class CurrencyViewModel: ViewModelProtocol {
                 }
             }
         }
+    }
+    
+    // 환율 상승/하락 여부를 판단
+    func rateChangeState(
+        storedRate: Double,
+        newRate: Double,
+        updatedDate: Date,
+        newDate: Date
+    ) -> String {
+        let calendar = Calendar.current
+        let isSameDay = calendar.isDate(updatedDate, inSameDayAs: newDate)
+        
+        print("🔍 oldRate: \(storedRate), newRate: \(newRate)")
+        print("🔍 oldDate: \(updatedDate), newDate: \(newDate)")
+        print("🔍 isSameDay: \(isSameDay)")
+        
+        guard !isSameDay else { return "" }
+        
+        let minusValue = newRate - storedRate
+        if abs(minusValue) > 0.01 {
+            if minusValue > 0.01 { return "🔼" }
+            if minusValue < -0.01 { return "🔽" }
+        }
+        return ""
     }
     
     // 1. 북마크된 -> 2. 통화코드순 -> 3. 북마크 안된 -> 4. 통화코드순
@@ -118,12 +146,6 @@ final class CurrencyViewModel: ViewModelProtocol {
     
     func toggleBookmark(countryCode: String) {
         do {
-            // CoreData에 해당 countryCode가 존재하는지 확인
-            if try
-                !self.coreDataUseCase.exits(countryCode: countryCode) {
-                try self.coreDataUseCase.insert(countryCode: countryCode)
-            }
-            
             try self.coreDataUseCase.toggleBookmark(countryCode: countryCode)
             
             guard var currencyItems = self.currencyItems else { return }

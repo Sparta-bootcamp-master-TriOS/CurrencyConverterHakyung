@@ -10,6 +10,7 @@ import Foundation
 
 final class CurrencyDataSource {
     func fetchData(url: URL, completion: @escaping (Result<Currency, CurrencyError>) -> Void) {
+        // fetch Open API
         AF.request(url).responseDecodable(of: Currency.self) { response in
             switch response.result {
             case .success(let currency):

@@ -35,12 +35,23 @@ extension CurrencyViewController: UITableViewDataSource {
         let item = items[indexPath.row]
         cell.selectionStyle = .none
         
+        let upDownIcon = viewModel.rateChangeState(
+            storedRate: item.value.oldRate,
+            newRate: item.value.rate,
+            updatedDate: item.value.updatedDate,
+            newDate: item.value.newDate
+        )
+        
         cell.onBookmarkBtnTapped = { [weak self] countryCode in
             guard let self else { return }
             self.viewModel.toggleBookmark(countryCode: countryCode)
         }
         cell.configureUI()
-        cell.configureItem(key: item.key, value: item.value)
+        cell.configureItem(
+            key: item.key,
+            value: item.value,
+            icon: upDownIcon
+        )
         return cell
     }
 }

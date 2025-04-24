@@ -17,5 +17,7 @@ public class CurrencyEntity: NSManagedObject {
     public enum Key {
         static let countryCode = "countryCode"
         static let isBookmarked = "isBookmarked"
+        static let rate = "rate"
+        static let updatedDate = "updatedDate"
     }
 }

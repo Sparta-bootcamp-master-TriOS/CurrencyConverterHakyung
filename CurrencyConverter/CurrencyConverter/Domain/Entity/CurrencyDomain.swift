@@ -5,6 +5,8 @@
 //  Created by kingj on 4/21/25.
 //
 
+import Foundation
+
 typealias CurrencyDom = CurrencyDomain
 typealias CurrencyItemDom = CurrencyItemDomain
 
@@ -17,4 +19,7 @@ struct CurrencyItemDomain: Decodable {
     let rate: Double
     let baseCode: String
     let isBookmarked: Bool
+    let updatedDate: Date
+    let oldRate: Double
+    let newDate: Date
 }

@@ -18,7 +18,10 @@ final class DIContainer {
     func currencyViewModel() -> CurrencyViewModel {
         // Currency
         let currencyDataSource = CurrencyDataSource()
-        let currencyRepository = CurrencyRepositoryImpl(currencyDataSource: currencyDataSource)
+        let currencyRepository = CurrencyRepositoryImpl(
+            currencyDataSource: currencyDataSource,
+            context: context
+        )
         let currencyUseCase = CurrencyUseCaseImpl(currencyRepository: currencyRepository)
         
         // CoreDate
