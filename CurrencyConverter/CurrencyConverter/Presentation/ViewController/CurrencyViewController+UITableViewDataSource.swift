@@ -26,6 +26,7 @@ extension CurrencyViewController: UITableViewDataSource {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: CurrencyCell.identifier, for: indexPath) as? CurrencyCell else {
             return UITableViewCell()
         }
+        cell.selectionStyle = .none
         cell.configureUI()
         let key = self.currencyItems[indexPath.row].key
         let value = self.currencyItems[indexPath.row].value
