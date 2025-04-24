@@ -7,7 +7,7 @@
 
 import CoreData
 
-final class CoreDataSource {
+final class CurrencyCoreDataSource {
     
     private let context: NSManagedObjectContext!
     
@@ -20,7 +20,7 @@ final class CoreDataSource {
         do {
             return try self.context.fetch(CurrencyEntity.fetchRequest())
         } catch {
-            throw CoreDataError.fetchFailed
+            throw CurrencyCoreDataError.fetchFailed
         }
     }
     
@@ -48,16 +48,16 @@ final class CoreDataSource {
         do {
             let result = try self.context.fetch(request)
             guard let currency = result.first else {
-                throw CoreDataError.fetchFailed
+                throw CurrencyCoreDataError.fetchFailed
             }
             
             currency.isBookmarked.toggle()
             try self.context.save()
             
-        } catch let error as CoreDataError {
+        } catch let error as CurrencyCoreDataError {
             throw error
         } catch {
-            throw CoreDataError.saveFailed
+            throw CurrencyCoreDataError.saveFailed
         }
     }
 }

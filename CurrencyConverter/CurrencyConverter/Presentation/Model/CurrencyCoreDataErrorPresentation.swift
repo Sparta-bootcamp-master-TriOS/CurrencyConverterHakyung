@@ -5,7 +5,7 @@
 //  Created by kingj on 4/23/25.
 //
 
-enum CoreDataErrorPresentation: Error {
+enum CurrencyCoreDataErrorPresentation: Error {
     case fetchFailed
     case saveFailed
     

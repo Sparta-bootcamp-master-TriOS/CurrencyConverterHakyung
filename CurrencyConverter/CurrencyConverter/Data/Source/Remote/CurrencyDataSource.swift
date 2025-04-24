@@ -31,4 +31,23 @@ final class CurrencyDataSource {
             }
         }
     }
+    
+    func fetchMockData(url: URL, completion: @escaping (Result<Currency, CurrencyError>) -> Void) {
+        // fetch MockCurrencyResponse
+        guard let url = Bundle.main.url(forResource: "MockCurrencyResponse", withExtension: "json") else {
+            print("File Not Found")
+            completion(.failure(.unknown))
+            return
+        }
+        
+        do {
+            let data = try Data(contentsOf: url)
+            let currencyResult = try JSONDecoder().decode(Currency.self, from: data)
+            completion(.success(currencyResult))
+        } catch {
+            print("File Decoding Error")
+            completion(.failure(.unknown))
+            return
+        }
+    }
 }
