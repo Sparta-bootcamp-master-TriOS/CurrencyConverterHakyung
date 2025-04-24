@@ -19,5 +19,6 @@ public class CurrencyEntity: NSManagedObject {
         static let isBookmarked = "isBookmarked"
         static let rate = "rate"
         static let updatedDate = "updatedDate"
+        static let currentRate = "currentRate"
     }
 }

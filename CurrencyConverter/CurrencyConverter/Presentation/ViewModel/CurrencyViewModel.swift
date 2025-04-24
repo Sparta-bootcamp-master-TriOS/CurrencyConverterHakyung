@@ -24,13 +24,14 @@ final class CurrencyViewModel: ViewModelProtocol {
     var action: ((Action) -> Void)?
     var onStateChanged: ((State) -> Void)?
     
+    // API + CoreData에서 가져온 최종 Currency 데이터
     private(set) var currencyItems: SortedCurrencyPrsn?
     
-    private let coreDataUseCase: CoreDataUseCaseImpl
+    private let coreDataUseCase: CurrencyCoreDataUseCaseImpl
     private let mergeUseCase: MergeUseCaseImpl
     
     init(
-        coreDataUseCase: CoreDataUseCaseImpl,
+        coreDataUseCase: CurrencyCoreDataUseCaseImpl,
         mergeUseCase: MergeUseCaseImpl
     ) {
         self.coreDataUseCase = coreDataUseCase
@@ -160,7 +161,7 @@ final class CurrencyViewModel: ViewModelProtocol {
             self.currencyItems = sortedCurrencyItems
             self.onStateChanged?(.currencyItems(sortedCurrencyItems))
             
-        } catch let error as CoreDataErrorPresentation {
+        } catch let error as CurrencyCoreDataErrorPresentation {
             print(error.description)
         } catch {
             print("[Unknowned Error] At Toggle Bookmark : \(error.localizedDescription)")

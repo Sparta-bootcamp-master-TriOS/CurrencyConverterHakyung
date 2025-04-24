@@ -7,11 +7,11 @@
 
 import Foundation
 
-final class CoreDataRepositoryImpl: CoreDataRepository {
+final class CurrencyCoreDataRepositoryImpl: CurrencyCoreDataRepository {
     
-    private let coreDataSource: CoreDataSource
+    private let coreDataSource: CurrencyCoreDataSource
     
-    init(coreDataSource: CoreDataSource) {
+    init(coreDataSource: CurrencyCoreDataSource) {
         self.coreDataSource = coreDataSource
     }
     

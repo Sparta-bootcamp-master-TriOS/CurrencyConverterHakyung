@@ -10,11 +10,11 @@ import Foundation
 final class MergeUseCaseImpl: MergeUseCase {
     
     private let currencyUseCase: CurrencyUseCaseImpl
-    private let coreDataUseCase: CoreDataUseCaseImpl
+    private let coreDataUseCase: CurrencyCoreDataUseCaseImpl
     
     init(
         currencyUseCase: CurrencyUseCaseImpl,
-        coreDataUseCase: CoreDataUseCaseImpl
+        coreDataUseCase: CurrencyCoreDataUseCaseImpl
     ) {
         self.currencyUseCase = currencyUseCase
         self.coreDataUseCase = coreDataUseCase

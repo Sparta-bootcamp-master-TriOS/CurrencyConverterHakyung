@@ -5,11 +5,11 @@
 //  Created by kingj on 4/23/25.
 //
 
-final class CoreDataUseCaseImpl: CoreDataUseCase {
+final class CurrencyCoreDataUseCaseImpl: CurrencyCoreDataUseCase {
     
-    private let coreDataRepository: CoreDataRepositoryImpl
+    private let coreDataRepository: CurrencyCoreDataRepositoryImpl
     
-    init(coreDataRepository: CoreDataRepositoryImpl) {
+    init(coreDataRepository: CurrencyCoreDataRepositoryImpl) {
         self.coreDataRepository = coreDataRepository
     }
     

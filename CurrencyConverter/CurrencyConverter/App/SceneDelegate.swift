@@ -11,16 +11,29 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
 
-
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let windowScene = (scene as? UIWindowScene) else { return }
+        
+        let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+        let userStateDataSource = UserStateDataSource(context: context)
+        let userStateRepository = UserStateRepositoryImpl(userStateDataSource: userStateDataSource)
+        let userStateUseCase = UserStateUseCaseImpl(userStateRepository: userStateRepository)
+
+        let savedClassName = userStateUseCase.getLastViewURI() ?? NSStringFromClass(CurrencyViewController.self)
+        
+        let currencyVM = DIContainer().currencyViewModel()
+        let rootVC = CurrencyViewController(viewModel: currencyVM)
+        let nav = UINavigationController(rootViewController: rootVC)
+        
+        if savedClassName == NSStringFromClass(CalculatorViewController.self) {
+            let calculatorVM = DIContainer().calculatorViewModel()
+            let calculatorVC = CalculatorViewController(viewModel: calculatorVM)
+            rootVC.navigationItem.backButtonTitle = "환율 정보"
+            nav.pushViewController(calculatorVC, animated: false)
+        }
+        
         let window = UIWindow(windowScene: windowScene)
-        
-        let viewModel = DIContainer().currencyViewModel()
-        window.rootViewController = UINavigationController(
-            rootViewController: CurrencyViewController(viewModel: viewModel)
-        )
-        
+        window.rootViewController = nav
         window.makeKeyAndVisible()
         self.window = window
     }
@@ -43,19 +56,54 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
 
     func sceneWillEnterForeground(_ scene: UIScene) {
-        // Called as the scene transitions from the background to the foreground.
-        // Use this method to undo the changes made on entering the background.
+        guard let windowScene = (scene as? UIWindowScene) else { return }
+
+        let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+        let userStateDataSource = UserStateDataSource(context: context)
+        let userStateRepository = UserStateRepositoryImpl(userStateDataSource: userStateDataSource)
+        let userStateUseCase = UserStateUseCaseImpl(userStateRepository: userStateRepository)
+
+        guard let savedClassName = userStateUseCase.getLastViewURI() else {
+            print("Error: 기본화면으로 이동")
+            return
+        }
+        
+        let currencyVM = DIContainer().currencyViewModel()
+        let rootVC = CurrencyViewController(viewModel: currencyVM)
+        let nav = UINavigationController(rootViewController: rootVC)
+        
+        if savedClassName == NSStringFromClass(CalculatorViewController.self) {
+            let calculatorVM = DIContainer().calculatorViewModel()
+            let calculatorVC = CalculatorViewController(viewModel: calculatorVM)
+            rootVC.navigationItem.backButtonTitle = "환율 정보"
+            nav.pushViewController(calculatorVC, animated: false)
+        }
+
+        let window = UIWindow(windowScene: windowScene)
+        window.rootViewController = nav
+        window.makeKeyAndVisible()
+        self.window = window
     }
 
     func sceneDidEnterBackground(_ scene: UIScene) {
-        // Called as the scene transitions from the foreground to the background.
-        // Use this method to save data, release shared resources, and store enough scene-specific state information
-        // to restore the scene back to its current state.
-
-        // Save changes in the application's managed object context when the application transitions to the background.
+        guard let nav = window?.rootViewController as? UINavigationController,
+              let topVC = nav.topViewController else { return }
+        
+        let vcIdentifier = NSStringFromClass(type(of: topVC))
+        
+        let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+        
+        // UserState
+        let userStateDataSource = UserStateDataSource(context: context)
+        let userStateRepository = UserStateRepositoryImpl(userStateDataSource: userStateDataSource)
+        let userStateUseCase = UserStateUseCaseImpl(userStateRepository: userStateRepository)
+        
+        let userState = UserStatePrsn(lastViewURI: vcIdentifier)
+        userStateUseCase.updateLastViewURI(userState.lastViewURI ?? "")
+        
         (UIApplication.shared.delegate as? AppDelegate)?.saveContext()
     }
 
-
+    
 }
 

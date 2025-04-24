@@ -12,4 +12,7 @@
             </uniquenessConstraint>
         </uniquenessConstraints>
     </entity>
+    <entity name="UserState" representedClassName="UserState" syncable="YES">
+        <attribute name="lastViewURI" optional="YES" attributeType="String"/>
+    </entity>
 </model>

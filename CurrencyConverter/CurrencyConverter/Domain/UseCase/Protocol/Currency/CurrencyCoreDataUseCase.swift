@@ -1,11 +1,11 @@
 //
-//  CoreDataRepository.swift
+//  CoreDataUseCase.swift
 //  CurrencyConverter
 //
 //  Created by kingj on 4/23/25.
 //
 
-protocol CoreDataRepository {
+protocol CurrencyCoreDataUseCase {
     func fetchAll() throws -> CurrencyDomain?
     func exits(countryCode: String) throws -> Bool
     func insert(countryCode: String) throws

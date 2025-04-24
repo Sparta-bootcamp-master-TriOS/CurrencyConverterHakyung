@@ -25,15 +25,17 @@ final class DIContainer {
         let currencyUseCase = CurrencyUseCaseImpl(currencyRepository: currencyRepository)
         
         // CoreDate
-        let coreDataSource = CoreDataSource(context: context)
-        let coreDataRepository = CoreDataRepositoryImpl(coreDataSource: coreDataSource)
-        let coreDataUseCase = CoreDataUseCaseImpl(coreDataRepository: coreDataRepository)
+        let coreDataSource = CurrencyCoreDataSource(context: context)
+        let coreDataRepository = CurrencyCoreDataRepositoryImpl(coreDataSource: coreDataSource)
+        let coreDataUseCase = CurrencyCoreDataUseCaseImpl(coreDataRepository: coreDataRepository)
         
+        // Merge: Currency + CoreDate
         let mergeUseCase = MergeUseCaseImpl(
             currencyUseCase: currencyUseCase,
             coreDataUseCase: coreDataUseCase
         )
         
+        // ViewModel
         let viewModel = CurrencyViewModel(
             coreDataUseCase: coreDataUseCase,
             mergeUseCase: mergeUseCase
