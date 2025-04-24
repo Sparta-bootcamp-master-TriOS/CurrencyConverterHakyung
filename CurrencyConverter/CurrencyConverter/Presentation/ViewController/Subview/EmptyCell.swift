@@ -15,7 +15,7 @@ final class EmptyCell: UITableViewCell {
 
     private let lable = UILabel().then {
         $0.text = "검색 결과 없음"
-        $0.textColor = .gray
+        $0.textColor = .secondaryText
         $0.textAlignment = .center
         $0.font = .systemFont(ofSize: 16, weight: .regular)
     }
@@ -29,6 +29,8 @@ final class EmptyCell: UITableViewCell {
     }
     
     func configureUI() {
+        self.contentView.backgroundColor = .background
+        
         contentView.addSubview(lable)
         
         lable.snp.makeConstraints {

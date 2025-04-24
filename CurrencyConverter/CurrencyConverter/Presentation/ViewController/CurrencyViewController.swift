@@ -39,6 +39,7 @@ final class CurrencyViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        configuteUI()
         configureSubview()
         configureAutoLayout()
         
@@ -72,9 +73,13 @@ final class CurrencyViewController: UIViewController {
         self.present(alert, animated: true, completion: nil)
         
     }
+    private func configuteUI() {
+        self.title = "환율 정보"
+        self.navigationController?.navigationBar.prefersLargeTitles = true
+    }
     
     private func configureSubview() {
-        view.backgroundColor = .white
+        view.backgroundColor = .background
         
         [
             tableView,

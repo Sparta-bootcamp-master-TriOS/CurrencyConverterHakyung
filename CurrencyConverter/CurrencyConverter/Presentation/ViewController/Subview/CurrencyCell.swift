@@ -16,17 +16,17 @@ class CurrencyCell: UITableViewCell {
     var onBookmarkBtnTapped: ((String) -> Void)?
 
     private let countryCodeLable = UILabel().then {
-        $0.textColor = .black
+        $0.textColor = .mainText
         $0.font = .systemFont(ofSize: 16, weight: .medium)
     }
     
     private let countryLable = UILabel().then {
-        $0.textColor = .gray
+        $0.textColor = .secondaryText
         $0.font = .systemFont(ofSize: 14, weight: .light)
     }
 
     private let rateLable = UILabel().then {
-        $0.textColor = .black
+        $0.textColor = .mainText
         $0.font = .systemFont(ofSize: 16)
         $0.textAlignment = .right
     }
@@ -50,7 +50,7 @@ class CurrencyCell: UITableViewCell {
         }
         
         $0.addAction(action, for: .touchUpInside)
-        $0.tintColor = .systemYellow
+        $0.tintColor = .favorite
     }
     
     private let upDownLabel = UILabel().then {
@@ -74,6 +74,7 @@ class CurrencyCell: UITableViewCell {
     }
     
     func configureUI() {
+        self.contentView.backgroundColor = .background
         [
             stackView,
             rateLable,
