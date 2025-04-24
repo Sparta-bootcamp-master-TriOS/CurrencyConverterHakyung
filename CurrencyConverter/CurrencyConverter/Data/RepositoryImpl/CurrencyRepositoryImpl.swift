@@ -17,7 +17,7 @@ final class CurrencyRepositoryImpl: CurrencyRepository {
     }
     
     func fetchCurrency(completion: @escaping (Result<Currency, CurrencyError>) -> Void) {
-        var urlComponents = URLComponents(string: "https://open.er-api.com/v6/latest/USD")
+        let urlComponents = URLComponents(string: "https://open.er-api.com/v6/latest/USD")
 
         guard let url = urlComponents?.url else {
             completion(.failure(CurrencyError.network))

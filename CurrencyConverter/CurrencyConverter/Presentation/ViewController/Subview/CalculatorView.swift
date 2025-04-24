@@ -83,12 +83,15 @@ final class CalculatorView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func updateResult(input: String, result: String) {
-        guard let countryCode = self.countryCodeLable.text else { return }
+    func updateResult(input: String?, result: String?) {
+        guard let countryCode = self.countryCodeLable.text,
+              let input,
+              let result else { return }
         self.resultLabel.text = "$\(input) → \(result) \(countryCode)"
     }
     
-    func configureUI(_ item: CalculatorCurrency) {
+    func configureUI(_ item: CalculatorCurrency?) {
+        guard let item else { return }
         self.countryCodeLable.text = item.key
         self.countryNameLable.text = item.value.countryName
         self.amountTextField.placeholder = "달러(\(item.value.baseCode))를 입력하세요"

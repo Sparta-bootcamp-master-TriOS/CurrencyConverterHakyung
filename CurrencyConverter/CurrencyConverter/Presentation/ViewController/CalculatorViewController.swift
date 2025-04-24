@@ -9,15 +9,13 @@ import UIKit
 import SnapKit
 
 final class CalculatorViewController: UIViewController {
-        
-    let viewModel = DIContainer().calculatorViewModel()
-    
+            
     private let calculatorView = CalculatorView()
     
-    var selectedItem: CalculatorCurrency
+    private let viewModel: CalculatorViewModel?
     
-    init(selectedItem: CalculatorCurrency) {
-        self.selectedItem = selectedItem
+    init(viewModel: CalculatorViewModel) {
+        self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -26,32 +24,47 @@ final class CalculatorViewController: UIViewController {
     }
     
     override func loadView() {
-        calculatorView.configureUI(selectedItem)
+        calculatorView.configureUI(viewModel?.selectedItem)
         self.view = calculatorView
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        amountTextFieldHandler()
+        convertBtnAction()
+        showCalculatedResult()
     }
     
-    private func amountTextFieldHandler() {
+    private func convertBtnAction() {
         calculatorView.onConvertButtonTapped = { [weak self] input in
             guard let self else { return }
             if (Double(input) != nil) {
-                let result = viewModel.calculateCurrency(input: input, rate: selectedItem.value.rate)
-                calculatorView.updateResult(input: input, result: result)
+                viewModel?.action?(.calculate(input))
             } else {
-                let alert = UIAlertController(
-                    title: "오류",
-                    message: input.isEmpty ? "금액을 입력해주세요" : "올바른 숫자를 입력해주세요",
-                    preferredStyle: .alert
-                )
-                let cancel = UIAlertAction(title: "확인", style: .default, handler: nil)
-                alert.addAction(cancel)
-                view.endEditing(true)
-                self.present(alert, animated: true, completion: nil)
+                showErrorAlert(input)
             }
         }
+    }
+    
+    private func showErrorAlert(_ input: String) {
+        let alert = UIAlertController(
+            title: "오류",
+            message: input.isEmpty ? "금액을 입력해주세요" : "올바른 숫자를 입력해주세요",
+            preferredStyle: .alert
+        )
+        let cancel = UIAlertAction(title: "확인", style: .default, handler: nil)
+        alert.addAction(cancel)
+        view.endEditing(true)
+        self.present(alert, animated: true, completion: nil)
+    }
+    
+    private func showCalculatedResult() {
+        viewModel?.onStateChanged = { [weak self] state in
+            guard let self else { return }
+            switch state {
+            case .calculateResult(let input, let result):
+                self.calculatorView.updateResult(input: input, result: result)
+            }
+        }
+        
     }
 }

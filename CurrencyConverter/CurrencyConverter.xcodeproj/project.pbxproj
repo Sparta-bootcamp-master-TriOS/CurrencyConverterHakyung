@@ -279,7 +279,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "if [[ \"$(uname -m)\" == arm64 ]]\nthen\n    export PATH=\"/opt/homebrew/bin:$PATH\"\nfi\n\necho \"🔍 Running SwiftLint...\"\n\nif command -v swiftlint >/dev/null 2>&1; then\n    swiftlint || echo \"⚠️ SwiftLint finished with warnings (build continues)\"\nelse\n    echo \"⚠️ SwiftLint not installed. See https://github.com/realm/SwiftLint#installation\"\nfi\n";
+			shellScript = "if [[ \"$(uname -m)\" == arm64 ]]\nthen\n    export PATH=\"/opt/homebrew/bin:$PATH\"\nfi\n\necho \"🔍 Running SwiftLint...\"\n\nif command -v swiftlint >/dev/null 2>&1; then\n    swiftlint --config \"${SRCROOT}/.swiftlint.yml\" || echo \"⚠️ SwiftLint finished with warnings (build continues)\"\nelse\n    echo \"⚠️ SwiftLint not installed. See https://github.com/realm/SwiftLint#installation\"\nfi\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 

@@ -15,10 +15,8 @@ final class CurrencyUseCaseImpl: CurrencyUseCase {
         self.currencyRepository = currencyRepository
     }
     
-    func loadCurrency(completion: @escaping (Result<CurrencyDom, CurrencyError>) -> Void) {
-        currencyRepository.fetchCurrency { [weak self] result in
-            guard let self else { return }
-            
+    func fetchCurrency(completion: @escaping (Result<CurrencyDom, CurrencyError>) -> Void) {
+        currencyRepository.fetchCurrency { result in
             switch result {
             case .success(let result):
                 let currencyData: [String: CurrencyItem] = result.rates.reduce(into: [:]) { dict, element in
