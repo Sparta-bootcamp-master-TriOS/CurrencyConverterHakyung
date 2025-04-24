@@ -31,7 +31,7 @@ final class CurrencyViewModel {
                     
                     var currencyItems = CurrencyPrsn()
                     result.currencyData.forEach {
-                        currencyItems[$0.key] =  CurrencyItemPrsn(countryName: $0.value.countryName, rate: $0.value.rate)
+                        currencyItems[$0.key] =  CurrencyItemPrsn(countryName: $0.value.countryName, rate: $0.value.rate, baseCode: $0.value.baseCode)
                     }
                     self.currencyItems = getSortedItems(currencyItems)
                     self.onItemsUpdate?(self.currencyItems)

@@ -11,6 +11,8 @@ import SnapKit
 
 final class CalculatorView: UIView {
     
+    var onConvertButtonTapped: ((String) -> Void)?
+    
     private let contentView = UIView()
     
     private let titleLable = UILabel().then {
@@ -42,7 +44,7 @@ final class CalculatorView: UIView {
         $0.textAlignment = .center
     }
     
-    private let convertButton = UIButton().then {
+    private lazy var convertButton = UIButton().then {
         var config = UIButton.Configuration.filled()
         config.baseBackgroundColor = .systemBlue
         config.baseForegroundColor = .white
@@ -54,6 +56,13 @@ final class CalculatorView: UIView {
 
         $0.configuration = config
         $0.layer.cornerRadius = 8
+        
+        let action = UIAction(title: "") { [weak self] _ in
+            guard let self,
+                  let input = self.amountTextField.text else { return }
+            self.onConvertButtonTapped?(input)
+        }
+        $0.addAction(action, for: .touchUpInside)
     }
     
     private let resultLabel = UILabel().then {
@@ -74,9 +83,15 @@ final class CalculatorView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
+    func updateResult(input: String, result: String) {
+        guard let countryCode = self.countryCodeLable.text else { return }
+        self.resultLabel.text = "$\(input) → \(result) \(countryCode)"
+    }
+    
     func configureUI(_ item: CalculatorCurrency) {
         self.countryCodeLable.text = item.key
         self.countryNameLable.text = item.value.countryName
+        self.amountTextField.placeholder = "달러(\(item.value.baseCode))를 입력하세요"
     }
     
     private func configureSubview() {

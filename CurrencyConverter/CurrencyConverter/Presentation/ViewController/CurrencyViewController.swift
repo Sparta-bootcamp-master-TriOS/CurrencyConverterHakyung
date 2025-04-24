@@ -11,7 +11,7 @@ import SnapKit
 
 final class CurrencyViewController: UIViewController {
     
-    let viewModel = DIContainer.shared.currencyViewModel()
+    let viewModel = DIContainer().currencyViewModel()
     
     var currencyItems = SortedCurrencyPrsn()
     

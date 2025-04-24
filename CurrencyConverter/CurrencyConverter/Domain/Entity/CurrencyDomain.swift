@@ -14,4 +14,5 @@ struct CurrencyDomain: Decodable {
 struct CurrencyItem: Decodable {
     let countryName: String
     let rate: Double
+    let baseCode: String
 }

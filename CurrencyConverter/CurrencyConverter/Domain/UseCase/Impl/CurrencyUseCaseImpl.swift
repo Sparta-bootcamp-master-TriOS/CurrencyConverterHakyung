@@ -25,7 +25,8 @@ final class CurrencyUseCaseImpl: CurrencyUseCase {
                     let (countryCode, value) = element
                     let countryName = CountryCode.countryCode[countryCode] ?? "nil"
                     let rate = value
-                    dict[countryCode] = CurrencyItem(countryName: countryName, rate: rate)
+                    let baseCode = result.baseCode
+                    dict[countryCode] = CurrencyItem(countryName: countryName, rate: rate, baseCode: baseCode)
                 }
                 completion(.success(CurrencyDom(currencyData: currencyData)))
                 
