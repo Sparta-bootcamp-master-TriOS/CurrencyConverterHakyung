@@ -18,10 +18,7 @@ extension CurrencyViewController: UITableViewDataSource {
             return UITableViewCell()
         }
         cell.configureUI()
-        
-        let currencyCode = self.currencyItems?[indexPath.row].0
-        let rate = String(format: "%.4f", self.currencyItems?[indexPath.row].1 ?? 0)
-        cell.configureItems(currencyCode: currencyCode, rate: rate)
+        cell.configureItem(item: self.currencyItems?[indexPath.row])
         return cell
     }
 }

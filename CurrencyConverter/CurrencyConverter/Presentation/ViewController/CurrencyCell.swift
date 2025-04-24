@@ -13,14 +13,25 @@ class CurrencyCell: UITableViewCell {
     
     static let identifier = "CurrencyCell"
 
-    private let currencyCodeLable = UILabel().then {
+    private let countryCodeLable = UILabel().then {
         $0.textColor = .black
-        $0.font = .systemFont(ofSize: 16)
+        $0.font = .systemFont(ofSize: 16, weight: .medium)
+    }
+    
+    private let countryLable = UILabel().then {
+        $0.textColor = .gray
+        $0.font = .systemFont(ofSize: 14, weight: .light)
     }
 
     private let rateLable = UILabel().then {
         $0.textColor = .black
         $0.font = .systemFont(ofSize: 16)
+        $0.textAlignment = .right
+    }
+    
+    private let stackView = UIStackView().then {
+        $0.axis = .vertical
+        $0.spacing = 4
     }
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -32,23 +43,34 @@ class CurrencyCell: UITableViewCell {
     }
     
     func configureUI() {
-        [ currencyCodeLable, rateLable ]
+        [
+            stackView,
+            rateLable,
+        ]
             .forEach { contentView.addSubview($0) }
         
-        currencyCodeLable.snp.makeConstraints {
-            $0.centerY.equalToSuperview()
+        [
+            countryCodeLable,
+            countryLable,
+        ]
+            .forEach { stackView.addArrangedSubview($0) }
+        
+        stackView.snp.makeConstraints {
             $0.leading.equalToSuperview().offset(16)
+            $0.centerY.equalToSuperview()
         }
         
         rateLable.snp.makeConstraints {
             $0.centerY.equalToSuperview()
             $0.trailing.equalToSuperview().inset(16)
+            $0.width.equalTo(120)
         }
     }
     
-    func configureItems(currencyCode: String?, rate: String?) {
-        guard let currencyCode, let rate else { return }
-        self.currencyCodeLable.text = currencyCode
-        self.rateLable.text = rate
+    func configureItem(item: CurrencyPrsn?) {
+        guard let item else { return }
+        self.countryCodeLable.text = item.countryCode
+        self.countryLable.text = item.countryName
+        self.rateLable.text = "\(item.rate)"
     }
 }
