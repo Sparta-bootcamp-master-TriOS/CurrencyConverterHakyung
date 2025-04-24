@@ -19,12 +19,20 @@ final class CurrencyUseCaseImpl: CurrencyUseCase {
         currencyRepository.fetchCurrency { result in
             switch result {
             case .success(let result):
-                let currencyData: [String: CurrencyItem] = result.rates.reduce(into: [:]) { dict, element in
-                    let (countryCode, value) = element
+                let currencyData: [String: CurrencyItemDom] = result.rates.reduce(into: [:]) { dict, element in
+                    
+                    let (countryCode, rate) = element
                     let countryName = CountryCode.countryCode[countryCode] ?? "nil"
-                    let rate = value
                     let baseCode = result.baseCode
-                    dict[countryCode] = CurrencyItem(countryName: countryName, rate: rate, baseCode: baseCode)
+                    
+                    dict[countryCode] = CurrencyItemDom(
+                        countryName: countryName,
+                        rate: rate,
+                        baseCode: baseCode,
+                        
+                        // CoreData
+                        isBookmarked: false
+                    )
                 }
                 completion(.success(CurrencyDom(currencyData: currencyData)))
                 

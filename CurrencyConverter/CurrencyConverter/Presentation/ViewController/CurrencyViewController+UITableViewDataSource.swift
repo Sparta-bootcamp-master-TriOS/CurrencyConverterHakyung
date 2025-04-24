@@ -34,6 +34,11 @@ extension CurrencyViewController: UITableViewDataSource {
         
         let item = items[indexPath.row]
         cell.selectionStyle = .none
+        
+        cell.onBookmarkBtnTapped = { [weak self] countryCode in
+            guard let self else { return }
+            self.viewModel.toggleBookmark(countryCode: countryCode)
+        }
         cell.configureUI()
         cell.configureItem(key: item.key, value: item.value)
         return cell
