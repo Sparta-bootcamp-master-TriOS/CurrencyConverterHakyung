@@ -6,5 +6,5 @@
 //
 
 protocol CurrencyUseCase {
-    func loadCurrency(completion: @escaping (Result<[CurrencyDom], CurrencyError>) -> Void)
+    func loadCurrency(completion: @escaping (Result<CurrencyDom, CurrencyError>) -> Void)
 }

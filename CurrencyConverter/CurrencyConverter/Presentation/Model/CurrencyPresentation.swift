@@ -5,10 +5,11 @@
 //  Created by kingj on 4/21/25.
 //
 
-typealias CurrencyPrsn = CurrencyPresentation
+typealias CurrencyPrsn = [String: CurrencyItemPrsn]
+typealias SortedCurrencyPrsn = [(key: String, value: CurrencyItemPrsn)]
+typealias CurrencyItemPrsn = CurrencyItemPresentation
 
-struct CurrencyPresentation: Decodable {
-    let countryCode: String
+struct CurrencyItemPresentation: Decodable {
     let countryName: String
     let rate: Double
 }

@@ -15,20 +15,19 @@ final class CurrencyUseCaseImpl: CurrencyUseCase {
         self.currencyRepository = currencyRepository
     }
     
-    func loadCurrency(completion: @escaping (Result<[CurrencyDom], CurrencyError>) -> Void) {
+    func loadCurrency(completion: @escaping (Result<CurrencyDom, CurrencyError>) -> Void) {
         currencyRepository.fetchCurrency { [weak self] result in
             guard let self else { return }
             
             switch result {
             case .success(let result):
-                let sortedRates = result.rates.sorted { $0.key < $1.key }
-                let mappedResult: [CurrencyDom] = sortedRates.compactMap { (key, value) in
-                    let countryCode = key
-                    let countryName = CountryCode.countryCode[key] ?? "nil"
+                let currencyData: [String: CurrencyItem] = result.rates.reduce(into: [:]) { dict, element in
+                    let (countryCode, value) = element
+                    let countryName = CountryCode.countryCode[countryCode] ?? "nil"
                     let rate = value
-                    return CurrencyDom(countryCode: countryCode, countryName: countryName, rate: rate)
+                    dict[countryCode] = CurrencyItem(countryName: countryName, rate: rate)
                 }
-                completion(.success(mappedResult))
+                completion(.success(CurrencyDom(currencyData: currencyData)))
                 
             case .failure(let error):
                 completion(.failure(error))

@@ -8,7 +8,10 @@
 typealias CurrencyDom = CurrencyDomain
 
 struct CurrencyDomain: Decodable {
-    let countryCode: String
+    let currencyData: [String: CurrencyItem]
+}
+
+struct CurrencyItem: Decodable {
     let countryName: String
     let rate: Double
 }
